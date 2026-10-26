@@ -71,7 +71,9 @@ Sistem web monorepo full-stack untuk **Gaskara Coffee** yang mengintegrasikan:
 ### Module 2: Web Pemesanan Customer (`/` & `/order`)
 - **Desain:** Responsif Mobile-First (lihat `DESIGN.md`).
 - **Katalog Menu:**
-  - Menampilkan foto menu persegi simetris (`image_url` 80x80px), nama menu, deskripsi singkat, harga, dan tombol `+ Tambah`.
+  - Fitur pencarian cepat nama menu & deskripsi secara realtime.
+  - Foto menu persegi rasio 1:1 (`w-24 h-24 aspect-square` / 96x96px), `rounded-xl`.
+  - Tata letak kartu simetris terkunci (`h-24 flex flex-col justify-between`): batas bawah harga dan tombol aksi presisi rata horizontal dengan batas bawah foto produk, bahkan dengan 2 baris deskripsi.
   - Menu dengan `is_available = false` diberi label visual "Habis" dan tombol dinonaktifkan.
 - **Form Checkout:**
   - Input teks wajib: `customer_name`.
@@ -92,12 +94,13 @@ Sistem web monorepo full-stack untuk **Gaskara Coffee** yang mengintegrasikan:
   - Tampilan visual kontras tinggi merah tebal agar langsung terlihat dari kejauhan.
 - Pesanan dengan status `'completed'` atau `'cancelled'` otomatis hilang dari layar tampilan.
 
-### Module 4: Admin Panel - Ketersediaan Menu (`/admin/menu`)
-- Daftar seluruh menu yang dikelompokkan berdasarkan kategori.
-- Sakelar toggle interaktif: **Tersedia (In Stock)** vs **Habis (Sold Out)**.
-- Fitur **+ Tambah Menu Baru** dengan upload/pilihan URL foto, kategori, dan deskripsi.
-- Fitur **Hapus Menu**.
-- Perubahan status langsung mengubah nilai kolom `is_available` di database Supabase dan langsung terpasang di sisi POS maupun Web Customer.
+### Module 4: Admin Panel - Ketersediaan & Kelola Menu (`/admin/menu`)
+- **Katalog Manajemen:** Daftar seluruh menu dikelompokkan rapi berdasarkan kategori (`Coffee`, `Non-Coffee`, `Snack`).
+- **Sakelar Toggle Status:** Sakelar instan **Tersedia (In Stock)** vs **Habis (Sold Out)** tanpa manajemen stok opname (Rule 3).
+- **Fitur + Tambah Menu Baru:** Modal dialog untuk mendaftarkan nama menu, kategori, harga (Rp), deskripsi singkat, dan URL foto.
+- **Fitur Edit Menu (Terkunci):** Tombol aksi ikon pensil pada setiap item untuk mengubah nama menu, kategori, harga, deskripsi, dan URL foto. Data langsung ter-update di Supabase / LocalStorage dan memicu event sinkronisasi realtime `gaskara_menu_updated`.
+- **Fitur Hapus Menu:** Konfirmasi dan penghapusan produk dari database.
+- **Sinkronisasi Otomatis:** Perubahan status ketersediaan atau detail produk langsung aktif di sisi POS Kasir maupun Web Pemesanan Customer tanpa jeda.
 
 ### Module 5: Admin Panel - Laporan Penjualan (`/admin/reports`)
 - **Kartu Metrik Utama:**

@@ -43,9 +43,9 @@ Untuk menjaga estetika yang proporsional dan tidak berlebihan (*natural rounded*
   - Kartu modul utama (*Dashboard Tiles* di `/admin`).
   - Kartu daftar item menu di Web Customer.
   - Box container metrik dan panel ringkasan.
-  - Dialog pop-up modal (`Tambah Menu`) dan drawer bottom sheet (`Checkout`).
+  - Dialog pop-up modal (`Tambah Menu` & `Edit Menu`) dan drawer bottom sheet (`Checkout`).
 - **`rounded-xl` (12px):**
-  - Thumbnail foto menu produk (`w-20 h-20 aspect-square`).
+  - Thumbnail foto menu produk (`w-24 h-24 aspect-square` / 96x96px).
   - Input form (nama, catatan, pencarian, nominal tunai).
   - Box nomor antrian di layar TV antrian (`/queue`).
   - Tombol aksi sekunder dan pecahan cepat kasir (20k, 50k, 100k, Pas).
@@ -84,8 +84,8 @@ Untuk menjaga estetika yang proporsional dan tidak berlebihan (*natural rounded*
 
 ### B. Web Pemesanan Customer (`/` & `/order`)
 - Tampilan difokuskan untuk smartphone (`max-w-md mx-auto`).
-- Foto produk berukuran presisi **80x80px** (`w-20 h-20`), `rounded-xl`, `object-cover`.
-- Teks info sejajar vertikal dengan foto: Judul di atas, deskripsi di tengah (`line-clamp-2`), harga dan tombol tambah di bagian bawah kartu.
+- Foto produk berukuran presisi **96x96px** (`w-24 h-24 aspect-square`), `rounded-xl`, `object-cover`.
+- Teks info sejajar vertikal dengan foto (`h-24 flex flex-col justify-between`): Judul di atas (`truncate`), deskripsi di tengah (`line-clamp-2 leading-snug`), harga dan tombol aksi presisi segaris horizontal dengan batas bawah foto.
 - Tombol Checkout floating di bawah layar dengan tinggi ringkas tanpa menutupi daftar menu.
 
 ### C. POS Kasir (`/admin/pos`)
@@ -97,3 +97,28 @@ Untuk menjaga estetika yang proporsional dan tidak berlebihan (*natural rounded*
 - Kunci viewport penuh tanpa scroll: `fixed inset-0 overflow-hidden`.
 - Pembagian 50:50 simetris antara **Sedang Dibuat** (kiri) dan **Siap Diambil** (kanan).
 - Kartu Siap Diambil menggunakan kontras merah tebal (`bg-red-600 text-white`) dengan animasi pulsing agar terbaca dari jarak jauh counter.
+
+---
+
+## 6. Aturan Kunci Desain Anti-Regresi (Strict Invariants)
+
+Aturan permanen yang DILARANG diubah pada iterasi berikutnya:
+
+1. **Kunci Alignment Kartu Menu Customer:**
+   - Foto: Wajib `w-24 h-24 aspect-square` (96x96px), `rounded-xl`, `object-cover`.
+   - Kontainer teks: Wajib `flex-1 min-w-0 h-24 flex flex-col justify-between py-0` dengan parent `flex gap-3 items-start`.
+   - Judul: Wajib `truncate` (1 baris) dengan `leading-snug` rapat ke atas (y=0 sejajar atas foto).
+   - Deskripsi: Wajib `line-clamp-2 leading-relaxed mt-0.5` (maksimal 2 baris).
+   - Baris aksi bawah: Wajib dikunci tinggi `h-7` (28px) untuk Harga, Tombol Tambah (`h-7`), dan Stepper (`h-7`). Menempel presisi di dasar kontainer `h-24` sehingga berada pada satu garis horizontal yang sama persis dengan batas bawah foto produk (y=96px).
+
+2. **Kunci Footer & Zero Blank Gap:**
+   - Dilarang memberi padding bawah statis raksasa (seperti `pb-28` atau `pb-36`).
+   - Gunakan dynamic padding: `cart.length > 0 ? 'pb-24' : 'pb-4'`.
+   - Bagian bawah kontainer selalu ditutup oleh footer ringkas simetris (`Gaskara Coffee • Self-pickup counter`).
+
+3. **Kunci Zero-Scroll Layar Antrian:**
+   - Root layout `/queue` wajib `fixed inset-0 overflow-hidden` agar tidak memicu scrollbar browser saat mode inspect mobile maupun layar TV display.
+
+4. **Kunci POS Bebas Gambar:**
+   - Katalog POS Kasir (`/admin/pos`) wajib strictly text-only tanpa elemen `<img>` produk.
+
