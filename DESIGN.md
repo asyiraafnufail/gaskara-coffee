@@ -93,10 +93,12 @@ Untuk menjaga estetika yang proporsional dan tidak berlebihan (*natural rounded*
 - Kalkulator pecahan cepat (Uang Pas, 20.000, 50.000, 100.000) dan hitung otomatis kembalian.
 - Pemisahan 3 tab kerja kasir: *Kasir Input*, *Order Masuk Web*, dan *Status Antrian*.
 
-### D. Layar Antrian TV (`/queue`)
-- Kunci viewport penuh tanpa scroll: `fixed inset-0 overflow-hidden`.
-- Pembagian 50:50 simetris antara **Sedang Dibuat** (kiri) dan **Siap Diambil** (kanan).
-- Kartu Siap Diambil menggunakan kontras merah tebal (`bg-red-600 text-white`) dengan animasi pulsing agar terbaca dari jarak jauh counter.
+### D. Layar Antrian TV & Mobile (`/queue`)
+- Kunci viewport penuh tanpa scroll window: `fixed inset-0 overflow-hidden`.
+- Pembagian 50:50 simetris antara **Sedang Dibuat** (kiri) dan **Siap Diambil** (kanan) pada layar TV/desktop.
+- List kartu antrian di dalam kolom menggunakan `overflow-y-auto` agar dapat discroll saat antrian banyak.
+- Kartu Siap Diambil menggunakan kontras merah tebal solid (`bg-red-600 text-white`) tanpa animasi breathing/pulse agar tidak mendistraksi mata pengunjung.
+- Mode Mobile Responsif (`sm:hidden`): Selector tab sederhana menggunakan label tepat: `Semua`, `Siap`, dan `Dibuat`.
 
 ---
 
@@ -116,8 +118,11 @@ Aturan permanen yang DILARANG diubah pada iterasi berikutnya:
    - Gunakan dynamic padding: `cart.length > 0 ? 'pb-24' : 'pb-4'`.
    - Bagian bawah kontainer selalu ditutup oleh footer ringkas simetris (`Gaskara Coffee • Self-pickup counter`).
 
-3. **Kunci Zero-Scroll Layar Antrian:**
+3. **Kunci Zero-Scroll Window Layar Antrian & Responsif Mobile:**
    - Root layout `/queue` wajib `fixed inset-0 overflow-hidden` agar tidak memicu scrollbar browser saat mode inspect mobile maupun layar TV display.
+   - Kolom antrian di dalam container wajib memiliki `overflow-y-auto` sehingga scrollable jika jumlah antrian banyak.
+   - Kartu "Siap Diambil" dilarang menggunakan animasi blinking/breathing (`animate-pulse`). Gunakan warna solid merah berdaya kontras tinggi.
+   - Tampilan mobile wajib menyediakan tab selector sederhana dengan label: `Semua`, `Siap`, dan `Dibuat` (dilarang teks verbose seperti 'split 50:50').
 
 4. **Kunci POS Bebas Gambar:**
    - Katalog POS Kasir (`/admin/pos`) wajib strictly text-only tanpa elemen `<img>` produk.

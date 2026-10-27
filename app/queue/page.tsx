@@ -11,6 +11,7 @@ export default function QueueDisplayPage() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [timeStr, setTimeStr] = useState('');
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'all' | 'ready' | 'preparing'>('all');
 
   const loadData = async () => {
     const list = await fetchOrders();
@@ -118,26 +119,74 @@ export default function QueueDisplayPage() {
         </div>
       </header>
 
+      {/* Mobile Tab Switcher (Hanya tampil di layar smartphone / mobile) */}
+      <div className="sm:hidden bg-white border-b border-slate-200 px-2.5 py-1.5 flex items-center gap-1.5 shrink-0">
+        <button
+          onClick={() => setMobileTab('all')}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-colors text-center ${
+            mobileTab === 'all'
+              ? 'bg-slate-900 text-white'
+              : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+          }`}
+        >
+          Semua
+        </button>
+        <button
+          onClick={() => setMobileTab('ready')}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-colors text-center flex items-center justify-center gap-1 ${
+            mobileTab === 'ready'
+              ? 'bg-red-600 text-white'
+              : 'bg-red-50 text-red-700 hover:bg-red-100'
+          }`}
+        >
+          <span>Siap</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 font-mono">
+            {readyOrders.length}
+          </span>
+        </button>
+        <button
+          onClick={() => setMobileTab('preparing')}
+          className={`flex-1 py-1.5 px-2 rounded-xl text-xs font-bold transition-colors text-center flex items-center justify-center gap-1 ${
+            mobileTab === 'preparing'
+              ? 'bg-cyan-600 text-white'
+              : 'bg-cyan-50 text-cyan-800 hover:bg-cyan-100'
+          }`}
+        >
+          <span>Dibuat</span>
+          <span className="px-1.5 py-0.2 rounded-full text-[10px] bg-white/20 font-mono">
+            {preparingOrders.length}
+          </span>
+        </button>
+      </div>
+
       {/* 2 Kolom Antrian: Sedang Dibuat & Siap Diambil */}
-      <main className="flex-1 min-h-0 grid grid-cols-2 gap-2 sm:gap-4 p-2 sm:p-4 overflow-hidden">
+      <main className="flex-1 min-h-0 p-2 sm:p-4 overflow-hidden flex flex-col sm:grid sm:grid-cols-2 gap-2 sm:gap-4">
         {/* Kolom 1: Sedang Dibuat */}
-        <section className="bg-white border border-slate-200 rounded-2xl flex flex-col min-h-0 overflow-hidden">
+        <section
+          className={`bg-white border border-slate-200 rounded-2xl flex-col min-h-0 overflow-hidden ${
+            mobileTab === 'ready' ? 'hidden sm:flex' : 'flex flex-1'
+          }`}
+        >
           <div className="bg-slate-100 px-3 sm:px-5 py-2 sm:py-3 border-b border-slate-200 flex items-center justify-between shrink-0">
             <h2 className="text-xs sm:text-sm font-bold text-slate-800 uppercase tracking-wide">
               Sedang Dibuat
             </h2>
-            <span className="text-xs sm:text-sm font-bold text-cyan-700">
+            <span className="text-xs sm:text-sm font-bold text-cyan-700 font-mono">
               {preparingOrders.length}
             </span>
           </div>
 
           <div className="flex-1 min-h-0 p-2 sm:p-3 overflow-y-auto">
             {preparingOrders.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-center text-slate-400 text-xs">
+              <div className="h-full flex items-center justify-center text-center text-slate-400 text-xs py-8">
                 Tidak ada pesanan dibuat
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div
+                className={`grid gap-2 ${
+                  mobileTab === 'preparing' ? 'grid-cols-2 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'
+                }`}
+              >
                 {preparingOrders.map((order) => (
                   <div
                     key={order.id}
@@ -157,27 +206,35 @@ export default function QueueDisplayPage() {
         </section>
 
         {/* Kolom 2: Siap Diambil */}
-        <section className="bg-white border border-red-200 rounded-2xl flex flex-col min-h-0 overflow-hidden">
+        <section
+          className={`bg-white border border-red-200 rounded-2xl flex-col min-h-0 overflow-hidden ${
+            mobileTab === 'preparing' ? 'hidden sm:flex' : 'flex flex-1'
+          }`}
+        >
           <div className="bg-red-600 px-3 sm:px-5 py-2 sm:py-3 flex items-center justify-between shrink-0 text-white">
             <h2 className="text-xs sm:text-sm font-bold uppercase tracking-wide">
               Siap Diambil
             </h2>
-            <span className="text-xs sm:text-sm font-bold">
+            <span className="text-xs sm:text-sm font-bold font-mono">
               {readyOrders.length}
             </span>
           </div>
 
           <div className="flex-1 min-h-0 p-2 sm:p-3 overflow-y-auto">
             {readyOrders.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-center text-slate-400 text-xs">
+              <div className="h-full flex items-center justify-center text-center text-slate-400 text-xs py-8">
                 Semua pesanan sudah diambil
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div
+                className={`grid gap-2 ${
+                  mobileTab === 'ready' ? 'grid-cols-2 sm:grid-cols-2' : 'grid-cols-1 sm:grid-cols-2'
+                }`}
+              >
                 {readyOrders.map((order) => (
                   <div
                     key={order.id}
-                    className="p-2.5 sm:p-4 rounded-xl bg-red-600 text-white flex flex-col justify-center animate-pulse"
+                    className="p-2.5 sm:p-4 rounded-xl bg-red-600 text-white flex flex-col justify-center shadow-sm"
                   >
                     <div className="text-2xl sm:text-4xl font-bold font-mono tracking-tight">
                       #{String(order.daily_queue_number).padStart(3, '0')}
