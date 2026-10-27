@@ -60,11 +60,12 @@ Untuk menjaga estetika yang proporsional dan tidak berlebihan (*natural rounded*
 
 ## 4. Tipografi & Tata Letak Teks
 
-- **Font Family Utama:** **Montserrat** (`--font-montserrat`), sans-serif bersih dengan geometric balance.
-- **Font Angka Operasional:** **Monospace** (`font-mono`) untuk:
+- **Font Family Utama:** **Montserrat** (`--font-montserrat`), sans-serif bersih dengan geometric balance. Digunakan untuk seluruh teks antarmuka, judul, dan **seluruh nominal harga Rupiah** di semua modul (Customer Web, POS Kasir, Laporan Penjualan, dan Admin Dashboard) agar konsisten seragam.
+- **Font Angka Operasional:** **Monospace** (`font-mono`) KHUSUS untuk:
   - Nomor antrian (`#001`, `#002`).
   - Jam realtime digital di layar antrian.
-  - Nominal harga Rupiah pada total tagihan dan kembalian tunai kasir.
+  - Kode pesanan unik (`GSK-YYYYMMDD-001`).
+  - *(DILARANG menggunakan `font-mono` pada angka harga Rupiah di modul mana pun).*
 - **Hierarki Teks:**
   - `h1`: 20px–24px (`text-xl` sampai `text-2xl`), `font-bold`, tracking tight.
   - `h2` / Card Titles: 14px–16px (`text-sm` sampai `text-base`), `font-bold`.
@@ -126,4 +127,17 @@ Aturan permanen yang DILARANG diubah pada iterasi berikutnya:
 
 4. **Kunci POS Bebas Gambar:**
    - Katalog POS Kasir (`/admin/pos`) wajib strictly text-only tanpa elemen `<img>` produk.
+
+5. **Kunci Font Harga Seragam (Montserrat Standard Sans-Serif):**
+   - SELURUH angka nominal harga Rupiah di SEMUA modul dan halaman (Web Menu Customer, Drawer Keranjang, Status Antrian Pelanggan, POS Kasir Katalog, POS Item Keranjang & Total Tagihan, Laporan Penjualan Harian/Bulanan/Tabel Transaksi, dan Ringkasan Omzet Dashboard Admin) WAJIB seragam menggunakan font standar Montserrat (`font-bold text-slate-900` / sans-serif).
+   - DILARANG KERAS menggunakan `font-mono` pada angka harga Rupiah di modul atau halaman mana pun.
+   - `font-mono` dikhususkan HANYA untuk: nomor antrian (`#001`, `#002`), jam digital realtime antrian, dan kode pesanan (`GSK-YYYYMMDD-001`).
+
+6. **Kunci Anti-Layout-Shift & Ukuran Box Konsisten (Zero-Jitter Invariant):**
+   - **Border State Konsisten:** Semua button selector tab dan filter kategori wajib mempertahankan border 1px baik saat aktif maupun inaktif (misal: `border-slate-900` saat aktif vs `border-slate-200` saat inaktif, `border-red-600` vs `border-slate-200`). DILARANG menghilangkan border saat state aktif karena memicu pergeseran dimensi 2px.
+   - **Katalog POS Kasir:** Kartu menu kasir wajib dikunci tinggi simetris `h-[92px]` dengan `line-clamp-2` pada nama menu agar ukuran box antar kategori (Coffee, Non-Coffee, Snack) tidak berubah atau meregang.
+   - **Gutter Scrollbar Stabil:** Kontainer katalog dan list antrian wajib menggunakan `[scrollbar-gutter:stable]` agar layout tidak melebar/menyempit saat kategori dengan sedikit item (seperti Snack) dipilih.
+   - **Header Display Antrian:** Badge huruf G (`w-8 h-8 rounded-xl`) wajib sejajar presisi dengan kontainer teks di sampingnya (`h-8 flex flex-col justify-between py-0.5`).
+   - **Lebar Modul Admin Konsisten:** Seluruh halaman admin (/admin, /admin/pos, /admin/menu, /admin/reports) dan header navbar wajib konsisten pada skala `max-w-6xl mx-auto px-4 sm:px-6`.
+
 

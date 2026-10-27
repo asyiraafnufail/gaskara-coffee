@@ -211,7 +211,7 @@ export default function AdminReportsPage() {
                             minute: '2-digit'
                           })}
                         </td>
-                        <td className="px-4 py-2.5 text-right font-semibold text-slate-900 font-mono">
+                        <td className="px-4 py-2.5 text-right font-bold text-slate-900">
                           Rp {o.total_amount.toLocaleString('id-ID')}
                         </td>
                       </tr>

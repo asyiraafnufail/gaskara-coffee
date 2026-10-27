@@ -140,7 +140,7 @@ export default function AdminHomePage() {
             <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse"></div>
             <span className="text-xs text-slate-500 font-medium">Omzet Hari Ini:</span>
           </div>
-          <span className="text-sm font-bold text-slate-900 font-mono">
+          <span className="text-sm font-bold text-slate-900">
             Rp {(report?.gross_sales_today || 0).toLocaleString('id-ID')}
           </span>
         </div>

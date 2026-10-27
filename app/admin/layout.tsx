@@ -186,10 +186,10 @@ function AdminAuthGuard({ children }: { children: React.ReactNode }) {
             {/* Bagian Kiri: Switcher Dashboard Admin & Customer + Tombol Kembali */}
             <div className="flex items-center gap-2 flex-wrap">
               {/* Mode Switcher Pill */}
-              <div className="inline-flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200/80">
+              <div className="h-8 inline-flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200/80">
                 <Link
                   href="/admin"
-                  className={`px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                  className={`h-full px-3 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
                     pathname.startsWith('/admin')
                       ? 'bg-white text-slate-900 shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -201,7 +201,7 @@ function AdminAuthGuard({ children }: { children: React.ReactNode }) {
 
                 <Link
                   href="/"
-                  className={`px-3 py-1 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
+                  className={`h-full px-3 rounded-lg font-bold transition-all flex items-center gap-1.5 ${
                     !pathname.startsWith('/admin')
                       ? 'bg-white text-slate-900 shadow-sm'
                       : 'text-slate-600 hover:text-slate-900'
@@ -216,7 +216,7 @@ function AdminAuthGuard({ children }: { children: React.ReactNode }) {
               {isAdminSubMenu && (
                 <Link
                   href="/admin"
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-800 hover:bg-cyan-100 font-bold transition-colors"
+                  className="h-8 inline-flex items-center gap-1.5 px-3 rounded-xl bg-cyan-50 border border-cyan-200 text-cyan-800 hover:bg-cyan-100 font-bold transition-colors"
                 >
                   <ArrowLeft className="w-3.5 h-3.5" />
                   <span>Kembali ke Dashboard Admin</span>
@@ -227,7 +227,7 @@ function AdminAuthGuard({ children }: { children: React.ReactNode }) {
             {/* Bagian Kanan: Tombol Logout */}
             <button
               onClick={handleLogout}
-              className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors font-bold text-xs shrink-0"
+              className="h-8 flex items-center gap-1 px-3 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 transition-colors font-bold text-xs shrink-0"
               title="Kunci / Keluar dari Admin"
             >
               <LogOut className="w-3.5 h-3.5" />

@@ -94,14 +94,16 @@ export default function QueueDisplayPage() {
           >
             <ArrowLeft className="w-4 h-4" />
           </Link>
-          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-red-600 text-white flex items-center justify-center font-bold text-xs sm:text-sm">
+          <div className="w-8 h-8 rounded-xl bg-red-600 text-white flex items-center justify-center font-black text-sm shrink-0">
             G
           </div>
-          <div>
-            <h1 className="text-xs sm:text-base font-bold tracking-tight text-slate-900 leading-none">
+          <div className="h-8 flex flex-col justify-between py-0.5">
+            <h1 className="text-xs sm:text-sm font-bold tracking-tight text-slate-900 leading-none">
               GASKARA COFFEE
             </h1>
-            <span className="text-[10px] text-slate-400">Antrian Pesanan</span>
+            <span className="text-[10px] text-slate-400 leading-none">
+              Antrian Pesanan
+            </span>
           </div>
         </div>
 

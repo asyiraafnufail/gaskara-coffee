@@ -30,6 +30,8 @@ export default function CustomerOrderView() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const [lastOrderCode, setLastOrderCode] = useState<string | null>(null);
+  const [isLookupModalOpen, setIsLookupModalOpen] = useState(false);
+  const [inputOrderCode, setInputOrderCode] = useState('');
 
   // Cart state
   const [cart, setCart] = useState<
@@ -168,20 +170,6 @@ export default function CustomerOrderView() {
       return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
     });
 
-  const currentPreparing = activeOrders
-    .filter(
-      (o) =>
-        (o.order_status === 'preparing' || o.order_status === 'received') &&
-        o.order_status !== 'ready' &&
-        o.order_status !== 'completed' &&
-        o.order_status !== 'cancelled'
-    )
-    .slice(0, 4);
-
-  const currentReady = activeOrders
-    .filter((o) => o.order_status === 'ready')
-    .slice(0, 4);
-
   const handleCreateOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!customerName.trim() || cart.length === 0) return;
@@ -222,25 +210,6 @@ export default function CustomerOrderView() {
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans">
       <div className="max-w-md mx-auto w-full min-h-screen bg-white border-x border-slate-200 flex flex-col justify-between">
         <div>
-          {/* Banner Pesanan Terakhir Aktif */}
-          {lastOrderCode && (
-            <div className="bg-cyan-50 border-b border-cyan-100 px-4 py-2">
-              <div className="flex items-center justify-between text-xs">
-                <div className="flex items-center gap-1.5 text-cyan-800 font-medium truncate">
-                  <Clock className="w-3.5 h-3.5 text-cyan-600 shrink-0" />
-                  <span className="truncate">Pesanan: {lastOrderCode}</span>
-                </div>
-                <Link
-                  href={`/order/status/${lastOrderCode}`}
-                  className="text-red-600 font-bold hover:underline shrink-0 flex items-center gap-1 pl-2"
-                >
-                  <span>Status</span>
-                  <ArrowRight className="w-3 h-3" />
-                </Link>
-              </div>
-            </div>
-          )}
-
           {/* Header Branding */}
           <header className="sticky top-0 z-30 bg-white border-b border-slate-200 px-4 h-14 flex items-center justify-between">
             <div className="flex items-center gap-2">
@@ -252,52 +221,44 @@ export default function CustomerOrderView() {
               </span>
             </div>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5">
               <Link
                 href="/queue"
-                className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-colors"
+                className="flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-full transition-colors"
               >
                 <Monitor className="w-3.5 h-3.5 text-cyan-600" />
                 <span>Antrian</span>
               </Link>
 
+              <button
+                type="button"
+                onClick={() => {
+                  if (lastOrderCode) {
+                    router.push(`/order/status/${lastOrderCode}`);
+                  } else {
+                    setIsLookupModalOpen(true);
+                  }
+                }}
+                className="flex items-center gap-1 text-xs font-semibold text-slate-700 bg-slate-100 hover:bg-slate-200 px-2.5 py-1.5 rounded-full transition-colors relative"
+              >
+                <Clock className="w-3.5 h-3.5 text-cyan-600" />
+                <span>Pesanan Saya</span>
+                {lastOrderCode && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-cyan-500 absolute -top-0.5 -right-0.5"></span>
+                )}
+              </button>
+
               {totalItemCount > 0 && (
                 <button
                   onClick={() => setIsCheckoutOpen(true)}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-cyan-50 text-cyan-700 border border-cyan-200 font-bold text-xs"
+                  className="flex items-center gap-1 px-2.5 py-1.5 rounded-full bg-red-600 text-white font-bold text-xs shadow-sm"
                 >
                   <ShoppingBag className="w-3.5 h-3.5" />
-                  <span>{totalItemCount} Item</span>
+                  <span>{totalItemCount}</span>
                 </button>
               )}
             </div>
           </header>
-
-          {/* Live Antrian Strip on Customer Mobile */}
-          {(currentReady.length > 0 || currentPreparing.length > 0) && (
-            <Link
-              href="/queue"
-              className="bg-slate-50 hover:bg-slate-100 border-b border-slate-200 px-4 py-2 flex items-center justify-between text-xs transition-colors"
-            >
-              <div className="flex items-center gap-2 overflow-hidden truncate">
-                {currentReady.length > 0 && (
-                  <div className="flex items-center gap-1 font-bold text-red-600 truncate">
-                    <span>Siap:</span>
-                    <span>{currentReady.map((o) => `#${String(o.daily_queue_number).padStart(3, '0')}`).join(', ')}</span>
-                  </div>
-                )}
-                {currentPreparing.length > 0 && (
-                  <div className="flex items-center gap-1 text-slate-600 truncate">
-                    <span className="font-medium text-slate-500">Dibuat:</span>
-                    <span className="font-semibold text-slate-800">
-                      {currentPreparing.map((o) => `#${String(o.daily_queue_number).padStart(3, '0')}`).join(', ')}
-                    </span>
-                  </div>
-                )}
-              </div>
-              <span className="text-[11px] text-cyan-600 font-semibold shrink-0 ml-2">Lihat Antrian →</span>
-            </Link>
-          )}
 
           {/* Search Box Simetris */}
           <div className="px-4 pt-3 pb-2 bg-white border-b border-slate-100">
@@ -334,9 +295,9 @@ export default function CustomerOrderView() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
                     activeCategory === cat.id
-                      ? 'bg-slate-900 text-white font-semibold'
+                      ? 'bg-slate-900 text-white'
                       : 'bg-slate-100 text-slate-600 hover:text-slate-900'
                   }`}
                 >
@@ -759,6 +720,59 @@ export default function CustomerOrderView() {
                 >
                   {submitting ? 'Memproses...' : 'Pesan & Dapatkan Antrian'}
                 </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Modal Cek Pesanan Saya */}
+        {isLookupModalOpen && (
+          <div className="fixed inset-0 z-50 bg-slate-900/40 flex items-center justify-center p-4">
+            <div className="bg-white rounded-2xl border border-slate-200 p-5 max-w-sm w-full shadow-xl">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-cyan-600" />
+                  <h3 className="font-bold text-xs text-slate-900 uppercase tracking-wide">
+                    Pesanan Saya
+                  </h3>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsLookupModalOpen(false)}
+                  className="text-slate-400 hover:text-slate-700 p-1 rounded-lg"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+
+              <div className="py-3 space-y-3">
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  Belum ada pesanan aktif tersimpan di perangkat ini. Masukkan kode pesanan untuk melihat status:
+                </p>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    if (inputOrderCode.trim()) {
+                      router.push(`/order/status/${inputOrderCode.trim().toUpperCase()}`);
+                    }
+                  }}
+                  className="space-y-3"
+                >
+                  <input
+                    type="text"
+                    required
+                    placeholder="Contoh: GSK-20261027-001"
+                    value={inputOrderCode}
+                    onChange={(e) => setInputOrderCode(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-900 placeholder-slate-400 focus:outline-none focus:border-cyan-500 uppercase font-mono"
+                  />
+                  <button
+                    type="submit"
+                    className="w-full py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white font-bold text-xs transition-colors"
+                  >
+                    Lihat Status Pesanan
+                  </button>
+                </form>
               </div>
             </div>
           </div>

@@ -236,26 +236,26 @@ export default function PosContent() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-3 sm:py-4 lg:h-[calc(100vh-3.5rem)] lg:flex lg:flex-col lg:overflow-hidden">
+    <div className="max-w-6xl mx-auto px-4 py-3 sm:py-4 lg:h-[calc(100vh-3.5rem)] lg:flex lg:flex-col lg:overflow-hidden">
       {/* Tab Navigation */}
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-2.5 mb-3 shrink-0">
         <div className="flex items-center gap-1.5">
           <button
             onClick={() => setActiveTab('pos')}
-            className={`px-4 py-1.5 rounded-full font-semibold text-xs transition-colors ${
+            className={`px-4 py-1.5 rounded-full font-semibold text-xs border transition-colors ${
               activeTab === 'pos'
-                ? 'bg-red-600 text-white'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-red-600 text-white border-red-600'
+                : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
             }`}
           >
             Kasir Input
           </button>
           <button
             onClick={() => setActiveTab('incoming')}
-            className={`relative px-4 py-1.5 rounded-full font-semibold text-xs transition-colors ${
+            className={`relative px-4 py-1.5 rounded-full font-semibold text-xs border transition-colors ${
               activeTab === 'incoming'
-                ? 'bg-red-600 text-white'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-red-600 text-white border-red-600'
+                : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
             }`}
           >
             Order Masuk Web
@@ -267,10 +267,10 @@ export default function PosContent() {
           </button>
           <button
             onClick={() => setActiveTab('queue')}
-            className={`px-4 py-1.5 rounded-full font-semibold text-xs transition-colors ${
+            className={`px-4 py-1.5 rounded-full font-semibold text-xs border transition-colors ${
               activeTab === 'queue'
-                ? 'bg-red-600 text-white'
-                : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
+                ? 'bg-red-600 text-white border-red-600'
+                : 'bg-white text-slate-700 hover:bg-slate-100 border-slate-200'
             }`}
           >
             Status Antrian ({activeQueueOrders.length})
@@ -334,10 +334,10 @@ export default function PosContent() {
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-colors ${
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap border transition-colors ${
                       selectedCategory === cat.id
-                        ? 'bg-slate-900 text-white'
-                        : 'bg-white text-slate-600 hover:bg-slate-50 border border-slate-200'
+                        ? 'bg-slate-900 text-white border-slate-900'
+                        : 'bg-white text-slate-600 hover:bg-slate-50 border-slate-200'
                     }`}
                   >
                     {cat.label}
@@ -346,8 +346,8 @@ export default function PosContent() {
               </div>
             </div>
 
-            {/* Scrollable Menu Items Grid */}
-            <div className="flex-1 min-h-0 lg:overflow-y-auto pr-1">
+            {/* Scrollable Menu Items Grid - Stable scrollbar gutter to prevent width jitter */}
+            <div className="flex-1 min-h-0 overflow-y-scroll pr-1 pb-4 [scrollbar-gutter:stable]">
               {loading ? (
                 <div className="p-10 text-center text-slate-400 text-xs">Memuat katalog...</div>
               ) : filteredMenus.length === 0 ? (
@@ -361,7 +361,7 @@ export default function PosContent() {
                       key={menu.id}
                       disabled={!menu.is_available}
                       onClick={() => addToCart(menu)}
-                      className={`p-3 rounded-xl border text-left transition-colors flex flex-col justify-between min-h-[84px] bg-white ${
+                      className={`h-[92px] p-3 rounded-xl border text-left transition-colors flex flex-col justify-between bg-white ${
                         !menu.is_available
                           ? 'opacity-40 border-slate-200 cursor-not-allowed bg-slate-50'
                           : 'border-slate-200 hover:border-cyan-400'
@@ -369,20 +369,20 @@ export default function PosContent() {
                     >
                       <div>
                         <div className="flex items-start justify-between gap-1">
-                          <span className="font-semibold text-xs text-slate-900 leading-snug">
+                          <span className="font-semibold text-xs text-slate-900 leading-snug line-clamp-2">
                             {menu.name}
                           </span>
                           {!menu.is_available && (
-                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600">
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-red-100 text-red-600 shrink-0">
                               Habis
                             </span>
                           )}
                         </div>
-                        <span className="text-[11px] text-slate-400 mt-0.5 block">
+                        <span className="text-[11px] text-slate-400 mt-0.5 block truncate">
                           {menu.category?.name || 'Item'}
                         </span>
                       </div>
-                      <div className="font-bold text-slate-900 text-xs mt-2">
+                      <div className="font-bold text-slate-900 text-xs mt-1">
                         Rp {menu.price.toLocaleString('id-ID')}
                       </div>
                     </button>
@@ -430,7 +430,7 @@ export default function PosContent() {
                   >
                     <div className="flex items-center justify-between gap-2 leading-none">
                       <span className="font-semibold text-slate-900 truncate">{item.name}</span>
-                      <span className="font-bold text-slate-900 shrink-0 font-mono">
+                      <span className="font-bold text-slate-900 shrink-0">
                         Rp {(item.price * item.quantity).toLocaleString('id-ID')}
                       </span>
                     </div>
@@ -599,7 +599,7 @@ export default function PosContent() {
               <div className="border-t border-slate-100 pt-2">
                 <div className="flex items-center justify-between text-xs font-semibold text-slate-700 mb-2">
                   <span>Total Tagihan</span>
-                  <span className="text-base text-slate-900 font-bold font-mono">
+                  <span className="text-base text-slate-900 font-bold">
                     Rp {cartTotal.toLocaleString('id-ID')}
                   </span>
                 </div>
@@ -619,8 +619,8 @@ export default function PosContent() {
 
       {/* View 2: Feed Pesanan Masuk Web */}
       {activeTab === 'incoming' && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
+        <div className="flex-1 min-h-0 flex flex-col gap-3 lg:overflow-hidden">
+          <div className="flex items-center justify-between shrink-0">
             <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
               Pesanan Masuk Web ({pendingWebOrders.length})
             </h3>
@@ -628,70 +628,72 @@ export default function PosContent() {
           </div>
 
           {pendingWebOrders.length === 0 ? (
-            <div className="p-10 text-center text-slate-400 text-xs bg-white rounded-2xl border border-slate-200">
+            <div className="flex-1 min-h-0 flex items-center justify-center p-10 text-center text-slate-400 text-xs bg-white rounded-2xl border border-slate-200">
               Tidak ada pesanan web yang menunggu konfirmasi.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {pendingWebOrders.map((order) => (
-                <div
-                  key={order.id}
-                  className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2.5 border-b border-slate-100 pb-2">
-                      <div>
-                        <span className="text-xl font-bold text-slate-900 font-mono">
-                          #{String(order.daily_queue_number).padStart(3, '0')}
-                        </span>
-                        <div className="text-[11px] text-slate-400">{order.order_code}</div>
-                      </div>
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-700">
-                        {order.order_type === 'dine_in' ? 'Dine In' : 'Takeaway'}
-                      </span>
-                    </div>
-
-                    <div className="text-xs font-semibold text-slate-800 mb-2">
-                      {order.customer_name}
-                    </div>
-
-                    <div className="bg-slate-50 rounded-xl p-3 space-y-1 mb-3 text-xs">
-                      {order.order_items?.map((item) => (
-                        <div key={item.id} className="flex justify-between text-slate-700">
-                          <span>
-                            {item.quantity}x {item.menu?.name || 'Menu'}
-                            {item.notes ? ` (${item.notes})` : ''}
+            <div className="flex-1 min-h-0 overflow-y-scroll pr-1 pb-6 [scrollbar-gutter:stable]">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {pendingWebOrders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between min-h-[220px]"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2.5 border-b border-slate-100 pb-2">
+                        <div>
+                          <span className="text-xl font-bold text-slate-900 font-mono">
+                            #{String(order.daily_queue_number).padStart(3, '0')}
                           </span>
-                          <span className="font-medium">Rp {item.subtotal.toLocaleString('id-ID')}</span>
+                          <div className="text-[11px] text-slate-400">{order.order_code}</div>
                         </div>
-                      ))}
-                      <div className="border-t border-slate-200 pt-1.5 flex justify-between font-bold text-slate-900">
-                        <span>Total ({order.payment_method.toUpperCase()}):</span>
-                        <span className="text-red-600">
-                          Rp {order.total_amount.toLocaleString('id-ID')}
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-medium bg-slate-100 text-slate-700">
+                          {order.order_type === 'dine_in' ? 'Dine In' : 'Takeaway'}
                         </span>
                       </div>
+
+                      <div className="text-xs font-semibold text-slate-800 mb-2">
+                        {order.customer_name}
+                      </div>
+
+                      <div className="bg-slate-50 rounded-xl p-3 space-y-1 mb-3 text-xs">
+                        {order.order_items?.map((item) => (
+                          <div key={item.id} className="flex justify-between text-slate-700">
+                            <span>
+                              {item.quantity}x {item.menu?.name || 'Menu'}
+                              {item.notes ? ` (${item.notes})` : ''}
+                            </span>
+                            <span className="font-medium">Rp {item.subtotal.toLocaleString('id-ID')}</span>
+                          </div>
+                        ))}
+                        <div className="border-t border-slate-200 pt-1.5 flex justify-between font-bold text-slate-900">
+                          <span>Total ({order.payment_method.toUpperCase()}):</span>
+                          <span className="text-red-600">
+                            Rp {order.total_amount.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
+                      <button
+                        onClick={() => handleCancelOrder(order.id)}
+                        className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-white hover:bg-slate-50 text-red-600 border border-slate-200 text-xs font-medium"
+                      >
+                        <XCircle className="w-3.5 h-3.5" />
+                        <span>Batalkan</span>
+                      </button>
+                      <button
+                        onClick={() => handleConfirmWebOrder(order.id)}
+                        className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5" />
+                        <span>Konfirmasi</span>
+                      </button>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100">
-                    <button
-                      onClick={() => handleCancelOrder(order.id)}
-                      className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-white hover:bg-slate-50 text-red-600 border border-slate-200 text-xs font-medium"
-                    >
-                      <XCircle className="w-3.5 h-3.5" />
-                      <span>Batalkan</span>
-                    </button>
-                    <button
-                      onClick={() => handleConfirmWebOrder(order.id)}
-                      className="flex items-center justify-center gap-1 py-2 px-2 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium"
-                    >
-                      <CheckCircle2 className="w-3.5 h-3.5" />
-                      <span>Konfirmasi</span>
-                    </button>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
@@ -699,8 +701,8 @@ export default function PosContent() {
 
       {/* View 3: Status Alur Antrian */}
       {activeTab === 'queue' && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
+        <div className="flex-1 min-h-0 flex flex-col gap-3 lg:overflow-hidden">
+          <div className="flex items-center justify-between shrink-0">
             <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wide">
               Antrian Dapur ({activeQueueOrders.length})
             </h3>
@@ -710,72 +712,74 @@ export default function PosContent() {
           </div>
 
           {activeQueueOrders.length === 0 ? (
-            <div className="p-10 text-center text-slate-400 text-xs bg-white rounded-2xl border border-slate-200">
+            <div className="flex-1 min-h-0 flex items-center justify-center p-10 text-center text-slate-400 text-xs bg-white rounded-2xl border border-slate-200">
               Tidak ada antrian aktif saat ini.
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-              {activeQueueOrders.map((order) => (
-                <div
-                  key={order.id}
-                  className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2.5 border-b border-slate-100 pb-2">
-                      <div>
-                        <span className="text-xl font-bold text-slate-900 font-mono">
-                          #{String(order.daily_queue_number).padStart(3, '0')}
-                        </span>
-                        <div className="text-xs font-medium text-slate-600">{order.customer_name}</div>
-                      </div>
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
-                          order.order_status === 'preparing'
-                            ? 'bg-cyan-50 text-cyan-800'
-                            : 'bg-red-50 text-red-600'
-                        }`}
-                      >
-                        {order.order_status === 'preparing' ? 'Sedang Dibuat' : 'Siap Diambil'}
-                      </span>
-                    </div>
-
-                    <div className="bg-slate-50 rounded-xl p-3 space-y-1 mb-3 text-xs text-slate-700">
-                      {order.order_items?.map((item) => (
-                        <div key={item.id} className="flex justify-between">
-                          <span>
-                            {item.quantity}x {item.menu?.name || 'Menu'}
+            <div className="flex-1 min-h-0 overflow-y-scroll pr-1 pb-6 [scrollbar-gutter:stable]">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                {activeQueueOrders.map((order) => (
+                  <div
+                    key={order.id}
+                    className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between min-h-[190px]"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2.5 border-b border-slate-100 pb-2">
+                        <div>
+                          <span className="text-xl font-bold text-slate-900 font-mono">
+                            #{String(order.daily_queue_number).padStart(3, '0')}
                           </span>
-                          {item.notes && (
-                            <span className="text-[11px] text-slate-400 italic ml-2">
-                              {item.notes}
-                            </span>
-                          )}
+                          <div className="text-xs font-medium text-slate-600">{order.customer_name}</div>
                         </div>
-                      ))}
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-semibold ${
+                            order.order_status === 'preparing'
+                              ? 'bg-cyan-50 text-cyan-800'
+                              : 'bg-red-50 text-red-600'
+                          }`}
+                        >
+                          {order.order_status === 'preparing' ? 'Sedang Dibuat' : 'Siap Diambil'}
+                        </span>
+                      </div>
+
+                      <div className="bg-slate-50 rounded-xl p-3 space-y-1 mb-3 text-xs text-slate-700">
+                        {order.order_items?.map((item) => (
+                          <div key={item.id} className="flex justify-between">
+                            <span>
+                              {item.quantity}x {item.menu?.name || 'Menu'}
+                            </span>
+                            {item.notes && (
+                              <span className="text-[11px] text-slate-400 italic ml-2">
+                                {item.notes}
+                              </span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="pt-2 border-t border-slate-100">
+                      {order.order_status === 'preparing' ? (
+                        <button
+                          onClick={() => handleAdvanceQueue(order.id, 'ready')}
+                          className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5" />
+                          <span>Tandai Siap Diambil</span>
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => handleAdvanceQueue(order.id, 'completed')}
+                          className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
+                        >
+                          <Clock className="w-3.5 h-3.5" />
+                          <span>Selesaikan Pesanan</span>
+                        </button>
+                      )}
                     </div>
                   </div>
-
-                  <div className="pt-2 border-t border-slate-100">
-                    {order.order_status === 'preparing' ? (
-                      <button
-                        onClick={() => handleAdvanceQueue(order.id, 'ready')}
-                        className="w-full py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
-                      >
-                        <CheckCircle2 className="w-3.5 h-3.5" />
-                        <span>Tandai Siap Diambil</span>
-                      </button>
-                    ) : (
-                      <button
-                        onClick={() => handleAdvanceQueue(order.id, 'completed')}
-                        className="w-full py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-medium transition-colors flex items-center justify-center gap-1.5"
-                      >
-                        <Clock className="w-3.5 h-3.5" />
-                        <span>Selesaikan Pesanan</span>
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
         </div>
